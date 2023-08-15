@@ -29,7 +29,7 @@ REMAP_DECIMATE = 16      # downscaling factor for remapping image
 
 ADAPTIVE_WINSZ = 55      # window size for adaptive threshold in reduced px
 
-TEXT_MIN_WIDTH = 15      # min reduced px width of detected text contour
+TEXT_MIN_WIDTH = 100      # min reduced px width of detected text contour
 TEXT_MIN_HEIGHT = 2      # min reduced px height of detected text contour
 TEXT_MIN_ASPECT = 1.5    # filter out text contours below this w/h ratio
 TEXT_MAX_THICKNESS = 10  # max reduced px thickness of detected text contour
@@ -872,15 +872,8 @@ def main():
 
         pagemask, page_outline = get_page_extents(small)
 
-        cinfo_list = get_contours(name, small, pagemask, 'text')
+        cinfo_list = get_contours(name, small, pagemask, 'line')
         spans = assemble_spans(name, small, pagemask, cinfo_list)
-
-        if len(spans) < 10:
-            print('  detecting lines because only', len(spans), 'text spans')
-            cinfo_list = get_contours(name, small, pagemask, 'line')
-            spans2 = assemble_spans(name, small, pagemask, cinfo_list)
-            if len(spans2) > len(spans):
-                spans = spans2
 
         if len(spans) < 5:
             print('skipping', name, 'because only', len(spans), 'spans')
