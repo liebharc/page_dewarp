@@ -25,7 +25,7 @@ PAGE_MARGIN_Y = 0       # reduced px to ignore near T/B edge
 
 OUTPUT_ZOOM = 1.0        # how much to zoom output relative to *original* image
 OUTPUT_DPI = 300         # just affects stated DPI of PNG, not appearance
-REMAP_DECIMATE = 16      # downscaling factor for remapping image
+REMAP_DECIMATE = 1      # downscaling factor for remapping image
 
 ADAPTIVE_WINSZ = 55      # window size for adaptive threshold in reduced px
 
@@ -822,23 +822,17 @@ def remap_image(name, img, small, page_dims, params):
 
     img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-    remapped = cv2.remap(img_gray, image_x_coords, image_y_coords,
-                         cv2.INTER_CUBIC,
-                         None, cv2.BORDER_REPLICATE)
+    remapped = cv2.remap(img_gray, image_x_coords, image_y_coords, cv2.INTER_CUBIC)
 
-    thresh = cv2.adaptiveThreshold(remapped, 255, cv2.ADAPTIVE_THRESH_MEAN_C,
-                                   cv2.THRESH_BINARY, ADAPTIVE_WINSZ, 25)
+    pil_image = Image.fromarray(remapped)
 
-    pil_image = Image.fromarray(thresh)
-    pil_image = pil_image.convert('1')
-
-    threshfile = name + '_thresh.png'
-    pil_image.save(threshfile, dpi=(OUTPUT_DPI, OUTPUT_DPI))
+    threshfile = name + '_thresh.jpg'
+    pil_image.save(threshfile)
 
     if DEBUG_LEVEL >= 1:
         height = small.shape[0]
-        width = int(round(height * float(thresh.shape[1])/thresh.shape[0]))
-        display = cv2.resize(thresh, (width, height),
+        width = int(round(height * float(remapped.shape[1])/remapped.shape[0]))
+        display = cv2.resize(remapped, (width, height),
                              interpolation=cv2.INTER_AREA)
         debug_show(name, 6, 'output', display)
 
