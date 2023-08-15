@@ -47,8 +47,8 @@ SPAN_MIN_WIDTH = 30      # minimum reduced px width for span
 SPAN_PX_PER_STEP = 20    # reduced px spacing for sampling along spans
 FOCAL_LENGTH = 1.2       # normalized focal length of camera
 
-DEBUG_LEVEL = 0          # 0=none, 1=some, 2=lots, 3=all
-DEBUG_OUTPUT = 'file'    # file, screen, both
+DEBUG_LEVEL = 3          # 0=none, 1=some, 2=lots, 3=all
+DEBUG_OUTPUT = 'screen'    # file, screen, both
 
 WINDOW_NAME = 'Dewarp'   # Window name for visualization
 
@@ -677,7 +677,7 @@ def visualize_spans(name, small, pagemask, spans):
 
     display = small.copy()
     display[mask] = (display[mask]/2) + (regions[mask]/2)
-    display[pagemask == 0] /= 4
+    display[pagemask == 0] = np.uint8(display[pagemask == 0] / 4)
 
     debug_show(name, 2, 'spans', display)
 
