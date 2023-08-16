@@ -822,7 +822,7 @@ def remap_image(name, img, small, page_dims, params):
 
     img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-    remapped = cv2.remap(img_gray, image_x_coords, image_y_coords, cv2.INTER_CUBIC)
+    remapped = cv2.remap(img_gray, image_x_coords, image_y_coords, cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 
     pil_image = Image.fromarray(remapped)
 
